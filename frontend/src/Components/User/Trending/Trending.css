@@ -1,0 +1,54 @@
+
+.card-body {
+  min-height: 180px;
+  min-width: 150px;
+  margin-right: 5px;
+  background-color: rgb(212, 212, 212);
+}
+
+.card-home{
+  margin-left: 0px;
+}
+
+.card-home::-webkit-scrollbar {
+  display: none;
+} 
+
+img {
+  height: 150px;
+}
+
+.home-content {
+  display: flex;
+  flex-direction: column;
+  position: inherit;
+  margin-left: 270px;
+  padding-top: 80px;
+}
+
+
+
+@media (max-width: 768px) {
+
+  .card-home{
+    margin-left: 40px;
+  }
+
+  .home-content {
+    display: flex;
+    flex-direction: column;
+    position: inherit;
+    margin-left: 0px;
+    padding-top: 80px;
+  }
+
+  h2.fantasy{
+    padding-left: 40px;
+  }
+  
+  h2.novel{
+    padding-left: 40px;
+    padding-top: 20px;
+
+  }
+} 

@@ -1,0 +1,75 @@
+import React, { useState } from 'react'
+import {FaBars } from 'react-icons/fa'
+import { AiFillHome } from "react-icons/ai";
+import { BiStore, BiTrendingUp, BiHistory, BiBookReader } from 'react-icons/bi'
+import { BsCalendarDateFill } from 'react-icons/bs'
+import { CgProfile } from 'react-icons/cg'
+import { NavLink } from 'react-router-dom'
+import './adminSidebar.css'
+
+function SideBar({children}) {
+    const [isOpen, setIsOpen] = useState(true)
+    // const toggle = ()=> setIsOpen(!isOpen)
+    const menuItem = [
+
+        {
+            path:'/overview',
+            name:'Overview',
+            icon:<AiFillHome/>,
+        },
+        {
+            path:'/books',
+            name:'Books',
+            icon:<BiTrendingUp />,
+        },
+        {
+            path:'/admin/members',
+            name:'Members',
+            icon:<BiStore/>,
+        },
+        {
+            path:'/market',
+            name:'Market',
+            icon:<BiHistory/>,
+        },
+        {
+            path:'/sold',
+            name:'Sold',
+            icon:<BiBookReader/>,
+        },
+        {
+            path:'/auction',
+            name:'Add to Auction',
+            icon:<BsCalendarDateFill/>,
+        },
+        {
+            path:'/admin/genre',
+            name:'Add Genre',
+            icon:<CgProfile/>,
+        },
+
+    ]
+  return (
+    <>
+        <div style={{width: isOpen ? "270px" : "50px"}} className='sidebar'>
+            <div className='top_section'>
+                <h1 style={{display: isOpen ? "block" : "none"}} className='logo'>MyBook</h1>
+                <div style={{marginLeft: isOpen ? "50px" : "0px"}} className='bars'>
+                    <FaBars/>
+                </div>
+            </div>
+            {
+                menuItem.map((item,index)=>(
+                <NavLink to={item.path} key={index} className='link' activeclassName='active'>
+                    <div className='icon'>{item.icon}</div>
+                    <div style={{display: isOpen ? "block" : "none"}} className='link_text'>{item.name}</div>
+                    </NavLink>
+                ))
+            }
+        </div>
+        <main style={{display:'flex',width:'344px'}} className='main-admin'>{children}</main>
+    </>
+  )
+}
+
+export default SideBar
