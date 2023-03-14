@@ -207,6 +207,10 @@ p.user-rating.card-text {
     justify-content: center;
 }
 
+.duedate-card-read{
+    margin: 53px;
+}
+
 @media (max-width: 768px) {
 
     .recent{
@@ -226,5 +230,9 @@ p.user-rating.card-text {
         padding-left: 0px;
         display: flex;
         justify-content: center;
+    }
+
+    .duedate-card-read{
+        margin: 35px 0px 0px !important;
     }
 }

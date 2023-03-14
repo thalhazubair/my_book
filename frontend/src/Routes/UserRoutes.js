@@ -13,6 +13,7 @@ import Biddings from "../Pages/User/Bidding";
 import Subscriptions from "../Pages/User/Subscription";
 
 import UserAuthorization from "../Verification/userVerification";
+import EditProfiles from "../Pages/User/EditProfile";
 
 
 
@@ -21,11 +22,10 @@ const UserRoutes = ()=>{
     <Routes>
       <Route path="/" element={<Login/>}/>
       <Route path="/signup" element={<Signup/>}/>
-
-      <Route element={<UserAuthorization />}>
-     
-      <Route path="/home" element={<Home/>}/>
       <Route path="/otp" element={<Otp/>}/>
+     
+      <Route element={<UserAuthorization />}>
+      <Route path="/home" element={<Home/>}/> 
       <Route path="/trending" element={<Trending/>}/>
       <Route path="/market" element={<Market/>}/>
       <Route path="/recent" element={<Recent/>}/>
@@ -34,8 +34,9 @@ const UserRoutes = ()=>{
       <Route path="/profile" element={<Profile/>}/>
       <Route path="/bid" element={<Biddings/>}/>
       <Route path="/subscription" element={<Subscriptions/>}/>
-     
+      <Route path="/editprofile" element={<EditProfiles/>}/>
       </Route>
+    
     </Routes>
     )
 }

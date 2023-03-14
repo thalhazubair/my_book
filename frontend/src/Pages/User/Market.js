@@ -18,7 +18,7 @@ function Markets() {
 
 
   return (
-    <div className="container">
+    <div>
        <SideBar/> 
       <Market book={bookData}  />
 

@@ -1,5 +1,4 @@
 import React, {useState} from 'react';
-import axios from '../../../Axios/Axios';
 import Swal from 'sweetalert2';
 import './AddGenre.css'
 import {
@@ -9,6 +8,7 @@ import {
   MDBInput
 }
 from 'mdb-react-ui-kit';
+import { addGenreAPI } from '../../../Services/adminServices';
 
 function AddGenre( {show, setShow}) {
   
@@ -26,12 +26,16 @@ function AddGenre( {show, setShow}) {
     setFormValues({ ...formValues, [name]: value });
   };
 
+  const data = {
+    genre:formValues.genre
+  }
+
   
 const handleSubmit = (e) =>{
   e.preventDefault()
-  axios.post("/admin/addgenre",{
-    genre:formValues.genre
-  }).then((res)=>{
+  
+  addGenreAPI(data)
+  .then((res)=>{
     if(res.data.exist){
       Swal.fire('genre already exist')
       toggleModal()

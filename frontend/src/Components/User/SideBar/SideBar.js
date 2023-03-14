@@ -8,7 +8,7 @@ import { NavLink } from 'react-router-dom'
 import './Sidebar.css'
 
 function SideBar({children}) {
-    const [isOpen, setIsOpen] = useState(true)
+    const [isOpen] = useState(true)
     // const toggle = ()=> setIsOpen(!isOpen)
     const menuItem = [
 
@@ -67,7 +67,7 @@ function SideBar({children}) {
                 ))
             }
         </div>
-        <main>{children}</main>
+        <main style={{display:'flex',margin:'auto'}}>{children}</main>
     </>
   )
 }

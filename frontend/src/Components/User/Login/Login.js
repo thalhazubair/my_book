@@ -1,5 +1,7 @@
-import React, {useState} from 'react';
-import axios from '../../../Axios/Axios'
+import React, {useState, useEffect} from 'react';
+import { useDispatch } from "react-redux"
+import { userLoginAPI } from '../../../Services/userServices';
+import { message } from 'antd'
 import './Login.css'
 import {
   MDBBtn,
@@ -14,6 +16,7 @@ from 'mdb-react-ui-kit';
 import { Link, useNavigate } from 'react-router-dom';
 
 function Login() {
+  const dispatch = useDispatch();
   const navigate = useNavigate()
 
   const initialValue = {
@@ -27,17 +30,33 @@ function Login() {
     setFormValues({ ...formValues, [name]: value });
   };
 
+  const data = {
+    username: formValues.username,
+    password: formValues.password
+  }
+  
+
   const handleSubmit = (e) => {
-    e.preventDefault();
-    axios
-      .post("/login", {
-        username: formValues.username,
-        password: formValues.password
-      })
+
+    e.preventDefault()
+
+   userLoginAPI(data)
       .then(function (response) {
+        if(response.data.blocked){
+          message.error(<span style={{color: 'black' }}>Sorry, You Have Been Blocked</span>)
+        }
         if (response.data.success) {
           const jwtToken = response.data.token
-          console.log(jwtToken);
+          const data = response.data.doc
+          
+          dispatch({
+            type: "StoreUser",
+            fullname:data.fullname,
+            username:data.username,
+            email:data.email,
+            phone:data.phone,
+            plan:data.plan,
+          })
           localStorage.setItem("userToken",jwtToken)
           navigate('/home')
         }
@@ -46,6 +65,16 @@ function Login() {
         console.log(error);
       });
     }
+
+    useEffect(() => {
+      const userToken = localStorage.getItem("userToken");
+      if (userToken) {
+        navigate("/home");   
+      }
+    }, []);
+
+   
+  
   return (
     <MDBContainer fluid>
 
@@ -78,6 +107,9 @@ function Login() {
 
     </MDBContainer>
   );
+
+  
 }
+
 
 export default Login;

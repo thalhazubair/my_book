@@ -31,36 +31,6 @@ function Otp() {
       }
     })
   }
-
-//   const otpSubmit = (e) => {
-//     const token = localStorage.getItem("otpToken");
-//     e.preventDefault();
-//     axios
-//       .post(
-//         "/verifyOtp",
-//         {
-//           id: location.state.id,
-//           email: location.state.email,
-//           otp,
-//         },
-//         {
-//           headers: {
-//             Authorization: token,
-//           },
-//         }
-//       )
-//       .then((response) => {
-//         if (response.data.success) {
-//           message.success("registered successfully");
-//           navigate("/login");
-//         } else {
-//           setError(response.data);
-//         }
-//       })
-//       .catch((Error) => {
-//         console.log(Error);
-//       });
-//   };
   const resendOTP = () => {
     setMinutes(1);
     setSeconds(30);
@@ -91,7 +61,8 @@ function Otp() {
     return () => {
       clearInterval(interval);
     };
-  }, [seconds]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   return (
     <div>
       <section className="wrapper mt-5">

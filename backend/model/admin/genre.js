@@ -9,7 +9,10 @@ const genreSchema = new Schema({
     status: {
         type:String,
         default:"active",
-    }
+    },
+    isBlocked: {
+        type: Boolean
+      }
     
 });
 

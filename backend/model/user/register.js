@@ -6,7 +6,14 @@ const userSchema = new Schema({
     username: String,
     email: String,
     phone: Number,
-    password: String
+    password: String,
+    plan:{
+        type:String,
+        default:"None"
+    },
+    isBlocked: {
+        type: Boolean
+      }
 });
 
 

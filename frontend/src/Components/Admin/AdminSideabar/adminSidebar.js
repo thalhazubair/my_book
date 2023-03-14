@@ -1,14 +1,22 @@
 import React, { useState } from 'react'
 import {FaBars } from 'react-icons/fa'
 import { AiFillHome } from "react-icons/ai";
-import { BiStore, BiTrendingUp, BiHistory, BiBookReader } from 'react-icons/bi'
+import { BiStore, BiTrendingUp, BiHistory, BiBookReader,BiLogOut } from 'react-icons/bi'
 import { BsCalendarDateFill } from 'react-icons/bs'
 import { CgProfile } from 'react-icons/cg'
-import { NavLink } from 'react-router-dom'
+import { NavLink, useNavigate } from 'react-router-dom'
 import './adminSidebar.css'
 
 function SideBar({children}) {
-    const [isOpen, setIsOpen] = useState(true)
+
+    const navigate = useNavigate()
+
+    const handleLogOut = ()=> {
+        localStorage.removeItem('adminToken');
+        navigate("/admin")
+      }
+
+    const [isOpen] = useState(true)
     // const toggle = ()=> setIsOpen(!isOpen)
     const menuItem = [
 
@@ -28,7 +36,7 @@ function SideBar({children}) {
             icon:<BiStore/>,
         },
         {
-            path:'/market',
+            path:'/admin/auction',
             name:'Market',
             icon:<BiHistory/>,
         },
@@ -38,7 +46,7 @@ function SideBar({children}) {
             icon:<BiBookReader/>,
         },
         {
-            path:'/auction',
+            path:'/admin/addauction',
             name:'Add to Auction',
             icon:<BsCalendarDateFill/>,
         },
@@ -47,6 +55,7 @@ function SideBar({children}) {
             name:'Add Genre',
             icon:<CgProfile/>,
         },
+      
 
     ]
   return (
@@ -66,6 +75,8 @@ function SideBar({children}) {
                     </NavLink>
                 ))
             }
+            <BiLogOut style={{margin:'10px auto'}} className='icon' onClick={handleLogOut}></BiLogOut>
+
         </div>
         <main style={{display:'flex',width:'344px'}} className='main-admin'>{children}</main>
     </>

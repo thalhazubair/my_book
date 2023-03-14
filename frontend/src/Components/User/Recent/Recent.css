@@ -10,7 +10,7 @@
 }
 
 p.card-text {
-    color: white;
+    color: #6e3131;
     font-family: ui-serif;
     font-size: 14px;
     padding-top: 5px;
@@ -24,7 +24,7 @@ p.card-text {
 }
 
 .card-subtitle.h6 {
-    color: wheat;
+    color: #6a4c14;
     font-size: 14px;
     font-family: monospace;
     padding-top: 5px;
@@ -68,7 +68,7 @@ button.btn.btn-primary {
 }
 
 p.return-date.card-text {
-    color: #7b7a78;
+    color: #644b19;
     padding-top: 5px;
 }
 
@@ -104,6 +104,10 @@ p.user-rating.card-text {
     justify-content: center;
 }
 
+.recent-card-read{
+    margin: 53px;
+}
+
 @media (max-width: 768px) {
 
     .recent{
@@ -123,5 +127,9 @@ p.user-rating.card-text {
         padding-left: 0px;
         display: flex;
         justify-content: center;
+    }
+
+    .recent-card-read{
+        margin: 35px 0px 0px !important;
     }
 }

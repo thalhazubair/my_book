@@ -1,20 +1,46 @@
-import React from 'react'
-import { MDBCol, MDBContainer, MDBRow, MDBCard, MDBCardText, MDBCardBody, MDBCardImage, MDBBtn, MDBTypography, MDBIcon } from 'mdb-react-ui-kit';
+import React, {useEffect} from 'react'
+import { MDBCol, MDBContainer, MDBRow, MDBCard, MDBCardText, MDBCardBody, MDBCardImage,MDBTypography} from 'mdb-react-ui-kit';
 import './Profile.css'
-import { Button, Header, Icon, Modal, Form  } from 'semantic-ui-react';
+import { Button} from 'semantic-ui-react';
 import { Link,useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { getUserDetailsAPI } from '../../../Services/userServices';
+
 
 export default function ProfileStatistics() {
 
+  const dispatch = useDispatch();
   const navigate = useNavigate()
+  const user = useSelector((state) => state);
+
+  useEffect(() => {
+    // fetch user details from backend
+    getUserDetailsAPI()
+      .then((res) => {
+        if (res.data.success) {
+          const data = res.data.doc;
+          dispatch({
+            type: "StoreUser",
+            fullname: data.fullname,
+            username: data.username,
+            email: data.email,
+            phone: data.phone,
+            plan: data.plan,
+          });
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
 
     const handleLogOut = ()=> {
-      console.log("haaa");
+      dispatch({
+        type: "RemoveUser",
+      })
       localStorage.removeItem('userToken');
       navigate("/")
     }
-
-  const [open, setOpen] = React.useState(false)
 
   return (
     <div className='profile-main'>
@@ -28,12 +54,14 @@ export default function ProfileStatistics() {
                   <MDBCardImage src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava2-bg.webp"
                     className="rounded-circle" fluid style={{ width: '100px',margin:'auto' }} />
                 </div>
-                <MDBTypography tag="h4" style={{ padding: '5px' }}>Julie L. Arsenault</MDBTypography>
+                <MDBTypography tag="h4" style={{ padding: '5px' }}>{user.fullname}</MDBTypography>
                 <MDBCardText className="text-muted mb-1">
-                  @Julie433 
+                  @{user.username}
                 </MDBCardText>
                 <div style={{display:'flex',flexDirection:'column',alignItems:'center'}}>
-                <Button className='profile-btn' variant="primary"  onClick={() => setOpen(true)}>Edit Profile</Button>
+                  <Link to='/editprofile'>
+                <Button className='profile-btn' variant="primary">Edit Profile</Button>
+                  </Link>
                 <Link to="/subscription">
                 <Button className='profile-btn' variant="primary" style={{backgroundColor:'blue'}}>Subscription</Button>
                 </Link>
@@ -51,7 +79,7 @@ export default function ProfileStatistics() {
                   </div>
                   <div>
                     <MDBCardText className="small text-muted mb-0">Subscription</MDBCardText>
-                    <MDBCardText className="mb-1 h5 profile-text">Monthly</MDBCardText>
+                    <MDBCardText className="mb-1 h5 profile-text">{user.plan}</MDBCardText>
 
                   </div>
                   <Button className='profile-btn' variant="primary" style={{backgroundColor:'black'}} onClick={handleLogOut}>LogOut</Button>
@@ -62,36 +90,6 @@ export default function ProfileStatistics() {
           </MDBCol>
         </MDBRow>
       </MDBContainer>
-      <Modal
-      onClose={() => setOpen(false)}
-      onOpen={() => setOpen(true)}
-      open={open}
-      className='modal-profile'
-    >
-      <Modal.Content className='modal-content-profile'>
-      <Form>
-    <Form.Group widths={2}>
-      <Form.Input label='Full Name' placeholder='Full Name' />
-      <Form.Input label='Username' placeholder='Username' />
-    </Form.Group>
-    <Form.Group widths={2}>
-      <Form.Input label='Email' placeholder='Email' />
-      <Form.Input label='Phone' placeholder='Phone' />
-    </Form.Group>
-    <Form.Group widths={2}>
-      <Form.Input label='Address' placeholder='Address' />
-      <Form.Input label='Password' placeholder='Password' />
-    </Form.Group>
-    <Button type='submit'>Submit</Button>
-    <Modal.Actions className='profile-action'>
-        <Button basic color='red' inverted onClick={() => setOpen(false)}>
-          <Icon className='profile-icon' name='remove' /> Cancel
-        </Button>
-      </Modal.Actions>
-  </Form>
-      </Modal.Content>
-      
-    </Modal>
     </div>
     </div>
   );

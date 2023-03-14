@@ -11,7 +11,7 @@ function Recent({book}) {
     
     <div className='recent'>
         <Container className='recent-book'>
-        <Row style={{ display: 'flex', flexWrap: 'wrap', justifyContent:'space-between' }}>
+        <Row className='recent-card-read' style={{ display: 'flex', flexWrap: 'wrap', justifyContent:'space-between' }}>
         {book.map((item, index)=>{
             console.log(item);
             let thumbnail = item.volumeInfo.imageLinks.thumbnail

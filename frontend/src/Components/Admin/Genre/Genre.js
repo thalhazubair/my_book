@@ -2,7 +2,8 @@ import React, {useEffect, useState} from 'react';
 import { MDBBtn, MDBTable, MDBTableHead, MDBTableBody } from 'mdb-react-ui-kit';
 import './Genre.css'
 import AddGenre from '../AddGenre/AddGenre';
-import axios from '../../../Axios/Axios'
+import Swal from 'sweetalert2'
+import { blockGenreAPI, genreAPI, unBlockAPI } from '../../../Services/adminServices';
 
 function Genre() {
 
@@ -13,14 +14,74 @@ function Genre() {
     setShow(true);
   };
 
+  const handleBlock = (id)=>{
+
+    Swal.fire({
+      
+      text: "Are you sure you want to block the Genre?",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: 'green',
+      cancelButtonColor: 'red',
+      confirmButtonText: 'Yes'
+    }).then((result)=>{
+      if(result.isConfirmed){
+
+        blockGenreAPI(id)
+        .then((response)=>{
+          if(response.data.success){
+            const setUser = genre.filter((value)=>{
+              if(value._id === id){
+                value.isBlocked = true
+              }
+              return value
+            })
+            setGenre(setUser)
+          }
+        })
+      }
+    })
+  }
+  
+  const handleUnBlock = (id)=>{
+
+    Swal.fire({
+      
+      text: "Are you sure you want to Unblock the Genre?",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: 'green',
+      cancelButtonColor: 'red',
+      confirmButtonText: 'Yes'
+    }).then((result)=>{
+
+      if(result.isConfirmed){
+       
+        unBlockAPI(id)
+        .then((response)=>{
+          if(response.data.success){
+            const setUser = genre.filter((value)=>{
+              if(value._id === id){
+                value.isBlocked = false
+              }
+              return value
+            })
+            setGenre(setUser)
+          }
+        })
+      }
+    })
+  }
+
   useEffect(()=>{
-    axios.get("/admin/genre")
+    console.log("hiiii");
+    genreAPI()
     .then((res)=>{
     if(res.data.success){
       setGenre(res.data.genre)
     }    
     })
-  },[genre])
+  },[show])
 
   
 
@@ -57,13 +118,12 @@ function Genre() {
     <td>
       <p className='fw-normal mb-1'>{doc.status}</p>
     </td>
-    <td>
-      <MDBBtn color='link' rounded size='sm'>
-        Edit
-      </MDBBtn>
-      <MDBBtn color='link' rounded size='sm'>
-        Edit
-      </MDBBtn>
+    <td className='genre-action'>
+    {
+                doc.isBlocked ===false ?
+                <MDBBtn color='success' rounded size='sm' onClick={()=>handleBlock(doc._id)}>Block</MDBBtn> :
+                <MDBBtn color='danger' rounded size='sm' onClick={()=>handleUnBlock(doc._id)}>UnBlock</MDBBtn> 
+                }
     </td>
   </tr>
   )

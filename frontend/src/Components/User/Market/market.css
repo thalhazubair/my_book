@@ -44,7 +44,6 @@ h1 span.market {
 .market-center {
   display: flex;
   justify-content: center;
-  margin-left: 244px;
 }
 
 .book-container-list-market::-webkit-scrollbar {
@@ -138,7 +137,7 @@ h1 span.market {
 .market-center {
   display: flex;
   justify-content: center;
-  margin-left: 150px;
+  margin-left: 270px;
 }
 
 .market-head {

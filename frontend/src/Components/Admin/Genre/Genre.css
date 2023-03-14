@@ -11,9 +11,11 @@
 
  th.action {
     display: flex;
-    justify-content: center;
 }
 
+.genre-action{
+    width: 10px;
+}
 
 @media (max-width: 768px) {
 

@@ -2,51 +2,55 @@ const { User } = require("../../model/user/register");
 const mailer = require('../../middleware/otp')
 const bcrypt = require("bcrypt");
 const Jwt = require("jsonwebtoken");
-
-
+const instance = require('../../middleware/razorpay')
+const crypto =require('crypto')
 
 module.exports = {
 getLogin: (req, res) => res.send('Hello World!'),
 
-postLogin: async (req, res) => {
-    const { username, password } = req.body;
-    await User.findOne({ username: username }).then((doc) => {
-        if (doc) {
-            bcrypt
-            .compare(req.body.password, doc.password)
-            .then((value)=>{
-                if(value){
-                   const payload = {
-                    username: username
-                   }
-                   Jwt.sign(
-                    payload,
-                    process.env.USER_SECRET,
-                    {
-                        expiresIn: 3600000,
-                    },
-                    (err,token) =>{
-                        if(err){
-                            console.error('some error occured')
-                        }else{
-                            res.json({
-                                success:true,
-                                token:`Bearer ${token}`,
-                            })
-                        }
-                    }
-                   )
-                }
-            })
-        } else {
-            console.log(password);
-
-            res.send({ auth: false });
-        }
-    }).catch((e) => {
-        // console.log(e);
-        res.status(505).send(e);
-    })
+postLogin: (req, res) => {
+    try {
+        const { username, password } = req.body;
+        User.findOne({ username: username }).then((doc) => {
+                const blocked = doc.isBlocked
+                if(blocked === false){
+                     bcrypt
+                    .compare(req.body.password, doc.password)
+                    .then((value)=>{
+                    
+                           const payload = {
+                            username: username
+                           }
+                           Jwt.sign(
+                            payload,
+                            process.env.USER_SECRET,
+                            {
+                                expiresIn: 3600000,
+                            },
+                            (err,token) =>{
+                                if(err){
+                                    console.error('some error occured')
+                                }else{
+                                    res.json({
+                                        
+                                        success:true,
+                                        doc:doc,
+                                        token:`Bearer ${token}`,
+                                    })
+                                }
+                            }
+                           )
+                        
+                    })
+                 }else{
+                    res.send({ blocked : true})
+                 }
+               
+        })
+    } catch (error) {
+        
+    }
+   
 },
 
 postSignup: async (req, res) => {
@@ -117,6 +121,8 @@ verifyOtp: async(req,res) =>{
             email:data.email,
             phone:data.phone,
             password:password,
+            plan:data.plan,
+            isBlocked:false
         });
         user.save().then(()=>{
             res.send({success:true})
@@ -124,7 +130,7 @@ verifyOtp: async(req,res) =>{
 })
 },
 
-resendOtp: async(req,res)=>{
+resendOtp: (req,res)=>{
     const email = req.body.email
     let mailDetails = {
         from: "thalhaz999@gmail.com",
@@ -143,5 +149,90 @@ resendOtp: async(req,res)=>{
             res.send({ success: true });
         }
     })
-}
+},
+
+editUser: (req,res) => {
+    try {
+        const data = req.body
+        
+    User.updateOne(
+        {
+            username:data.username,
+        },
+        {
+            $set: {
+                fullname: data.fullname,
+                username: data.username,
+                email:data.email,
+                phone:data.phone,
+                plan:data.plan
+              },
+        })
+        .then((data)=>{
+            res.send({success:true,doc:data})
+        })
+    } catch (error) {
+        
+    }
+    
+ },
+
+ getUserDetails: (req,res)=>{
+    const username = req.username
+    User.findOne({ username: username }).then((doc) => {
+        console.log(doc);
+res.send({
+    success:true,
+    doc:doc
+})
+    })
+ },
+
+ postPayment: (req,res) => {
+    const username = req.username
+    const price = req.body.price
+    const options = {
+        amount: price,
+        currency: 'INR',
+        // eslint-disable-next-line prefer-template
+        receipt: '' + username,
+      };
+      instance.orders.create(options, (err, order) => {
+        if (err) {
+          console.log(err);
+          res.status(400).json({
+            success: false,
+            err,
+          });
+        } else {
+            console.log(order)
+            res.status(200).json({ order: order })
+        }
+      });
+ },
+
+ verifyPayment : (req,res)=> {
+    const username = req.username
+    console.log(req.body)
+    let hmac = crypto.createHmac('sha256', process.env.KEYSECRET);
+    hmac.update(
+      `${req.body.payment.razorpay_order_id}|${req.body.payment.razorpay_payment_id}`
+    );
+    hmac = hmac.digest('hex');
+    User.updateOne(
+        {
+            username:username,
+        },
+        {
+            $set: {
+                plan:"Standard Plan"
+              },
+        })
+        .then(()=>{
+            res.send({
+                success:true,
+                message:'payment completed successfully'
+            })
+        })
+ }
 }

@@ -4,7 +4,7 @@ import Bidding from '../../Components/User/Bidding/Bidding'
 
 function Biddings() {
   return (
-    <div className='Bidding' style={{display:'flex'}}>
+    <div className='Bidding' style={{display:'flex', flexDirection:'column'}}>
         <SideBar/>
         <Bidding/>
     </div>
